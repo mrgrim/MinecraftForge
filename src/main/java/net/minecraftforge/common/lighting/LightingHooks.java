@@ -61,4 +61,24 @@ public class LightingHooks
             world.checkLightFor(EnumSkyBlock.SKY, new BlockPos(xBase, y, zBase));
         }
     }
+    
+    public static void initSkylightForSection(final World world, final Chunk chunk, final ExtendedBlockStorage section)
+    {
+        if (world.provider.hasSkyLight())
+        {
+            for (int x = 0; x < 16; ++x)
+            {
+                for (int z = 0; z < 16; ++z)
+                {
+                    if (chunk.getHeightValue(x, z) <= section.getYLocation())
+                    {
+                        for (int y = 0; y < 16; ++y)
+                        {
+                            section.setSkyLight(x, y, z, EnumSkyBlock.SKY.defaultLightValue);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
