@@ -77,7 +77,7 @@ public class LightingEngine
         sX = sZ + lZ,
         sY = sX + lX,
         sL = sY + lY;
-
+   
     //Bit segment masks
     private static final long
         mX = (1L << lX) - 1,
@@ -89,14 +89,14 @@ public class LightingEngine
     //Bit to check whether y had overflow
     private static final long yCheck = 1L << (sY + lY);
 
-    private static final long[] neighborShifts = new long[6];
+    private static final long[] neighborShifts = new long[EnumFacing.VALUES.length];
 
     static
     {
-        for (int i = 0; i < 6; ++i)
+        for (final EnumFacing dir : EnumFacing.VALUES)
         {
-            final Vec3i offset = EnumFacing.VALUES[i].getDirectionVec();
-            neighborShifts[i] = ((long) offset.getY() << sY) | ((long) offset.getX() << sX) | ((long) offset.getZ() << sZ);
+            final Vec3i offset = dir.getDirectionVec();
+            neighborShifts[dir.ordinal()] = ((long) offset.getY() << sY) | ((long) offset.getX() << sX) | ((long) offset.getZ() << sZ);
         }
     }
 
@@ -116,10 +116,10 @@ public class LightingEngine
 
     //Cached data about neighboring blocks (of tempPos)
     private boolean isNeighborDataValid = false;
-    private final Chunk[] neighborsChunk = new Chunk[6];
-    private final MutableBlockPos[] neighborsPos = new MutableBlockPos[6];
-    private final long[] neighborsLongPos = new long[6];
-    private final int[] neighborsLight = new int[6];
+    private final Chunk[] neighborsChunk = new Chunk[EnumFacing.VALUES.length];
+    private final MutableBlockPos[] neighborsPos = new MutableBlockPos[EnumFacing.VALUES.length];
+    private final long[] neighborsLongPos = new long[EnumFacing.VALUES.length];
+    private final int[] neighborsLight = new int[EnumFacing.VALUES.length];
 
     public LightingEngine(final World world)
     {
@@ -284,9 +284,11 @@ public class LightingEngine
 
                     this.fetchNeighborDataFromCur();
 
-                    for (int i = 0; i < 6; ++i)
+                    for (final EnumFacing dir : EnumFacing.VALUES)
                     {
-                        final Chunk nChunk = this.neighborsChunk[i];
+                        final int index = dir.ordinal();
+
+                        final Chunk nChunk = this.neighborsChunk[index];
 
                         if (nChunk == null)
                         {
@@ -294,18 +296,18 @@ public class LightingEngine
                             continue;
                         }
 
-                        final int nLight = this.neighborsLight[i];
+                        final int nLight = this.neighborsLight[index];
 
                         if (nLight == 0)
                         {
                             continue;
                         }
 
-                        final MutableBlockPos nPos = this.neighborsPos[i];
+                        final MutableBlockPos nPos = this.neighborsPos[index];
 
                         if (curLight - this.posToOpac(nPos, posToState(nPos, nChunk)) >= nLight) //schedule neighbor for darkening if we possibly light it
                         {
-                            this.enqueueDarkening(nPos, this.neighborsLongPos[i], nLight, nChunk);
+                            this.enqueueDarkening(nPos, this.neighborsLongPos[index], nLight, nChunk);
                         }
                         else //only use for new light calculation if not
                         {
@@ -361,25 +363,27 @@ public class LightingEngine
 
         this.isNeighborDataValid = true;
 
-        for (int i = 0; i < 6; ++i)
+        for (final EnumFacing dir : EnumFacing.VALUES)
         {
-            final long nLongPos = this.neighborsLongPos[i] = this.curData + neighborShifts[i];
+            final int index = dir.ordinal();
+
+            final long nLongPos = this.neighborsLongPos[index] = this.curData + neighborShifts[index];
 
             if ((nLongPos & yCheck) != 0)
             {
-                this.neighborsChunk[i] = null;
+                this.neighborsChunk[index] = null;
                 continue;
             }
 
-            final MutableBlockPos nPos = longToPos(this.neighborsPos[i], nLongPos);
+            final MutableBlockPos nPos = longToPos(this.neighborsPos[index], nLongPos);
 
             final long nChunkIdentifier = nLongPos & mChunk;
 
-            final Chunk nChunk = this.neighborsChunk[i] = nChunkIdentifier == this.curChunkIdentifier ? this.curChunk : this.posToChunk(nPos);
+            final Chunk nChunk = this.neighborsChunk[index] = nChunkIdentifier == this.curChunkIdentifier ? this.curChunk : this.posToChunk(nPos);
 
             if (nChunk != null)
             {
-                this.neighborsLight[i] = this.posToCachedLight(nPos, nChunk);
+                this.neighborsLight[index] = this.posToCachedLight(nPos, nChunk);
             }
         }
     }
@@ -402,15 +406,17 @@ public class LightingEngine
         int newLight = luminosity;
         this.fetchNeighborDataFromCur();
 
-        for (int i = 0; i < 6; ++i)
+        for (final EnumFacing dir : EnumFacing.VALUES)
         {
-            if (this.neighborsChunk[i] == null)
+            final int index = dir.ordinal();
+
+            if (this.neighborsChunk[index] == null)
             {
                 LightingHooks.flagSecBoundaryForUpdate(this.curChunk, this.curPos, this.lightType, dir, EnumBoundaryFacing.IN);
                 continue;
             }
 
-            final int nLight = this.neighborsLight[i];
+            final int nLight = this.neighborsLight[index];
 
             newLight = Math.max(nLight - opacity, newLight);
         }
@@ -422,11 +428,13 @@ public class LightingEngine
     {
         this.fetchNeighborDataFromCur();
 
-        for (int i = 0; i < 6; ++i)
+        for (final EnumFacing dir : EnumFacing.VALUES)
         {
-            final MutableBlockPos nPos = this.neighborsPos[i];
+            final int index = dir.ordinal();
 
-            final Chunk nChunk = this.neighborsChunk[i];
+            final MutableBlockPos nPos = this.neighborsPos[index];
+
+            final Chunk nChunk = this.neighborsChunk[index];
 
             if (nChunk == null)
             {
@@ -436,9 +444,9 @@ public class LightingEngine
 
             final int newLight = curLight - this.posToOpac(nPos, nChunk.getBlockState(nPos));
 
-            if (newLight > this.neighborsLight[i])
+            if (newLight > this.neighborsLight[index])
             {
-                this.enqueueBrightening(nPos, this.neighborsLongPos[i], newLight, nChunk);
+                this.enqueueBrightening(nPos, this.neighborsLongPos[index], newLight, nChunk);
             }
         }
     }
