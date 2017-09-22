@@ -35,6 +35,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.lighting.LightingHooks.EnumBoundaryFacing;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class LightingEngine
@@ -289,6 +290,7 @@ public class LightingEngine
 
                         if (nChunk == null)
                         {
+                            LightingHooks.flagSecBoundaryForUpdate(this.curChunk, this.curPos, this.lightType, dir, EnumBoundaryFacing.OUT);
                             continue;
                         }
 
@@ -404,6 +406,7 @@ public class LightingEngine
         {
             if (this.neighborsChunk[i] == null)
             {
+                LightingHooks.flagSecBoundaryForUpdate(this.curChunk, this.curPos, this.lightType, dir, EnumBoundaryFacing.IN);
                 continue;
             }
 
@@ -427,6 +430,7 @@ public class LightingEngine
 
             if (nChunk == null)
             {
+                LightingHooks.flagSecBoundaryForUpdate(this.curChunk, this.curPos, this.lightType, dir, EnumBoundaryFacing.OUT);
                 continue;
             }
 
