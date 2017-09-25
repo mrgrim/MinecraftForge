@@ -139,7 +139,7 @@
          }
  
          p_75820_3_.func_74782_a("TileEntities", nbttaglist2);
-@@ -382,6 +447,19 @@
+@@ -382,12 +447,19 @@
          }
  
          chunk.func_76602_a(aextendedblockstorage);

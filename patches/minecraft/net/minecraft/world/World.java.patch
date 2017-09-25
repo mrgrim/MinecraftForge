@@ -306,7 +306,7 @@
          float f3 = (float)(l >> 16 & 255) / 255.0F;
          float f4 = (float)(l >> 8 & 255) / 255.0F;
          float f5 = (float)(l & 255) / 255.0F;
-@@ -1444,20 +1533,25 @@
+@@ -1444,20 +1532,25 @@
  
      public float func_72826_c(float p_72826_1_)
      {
