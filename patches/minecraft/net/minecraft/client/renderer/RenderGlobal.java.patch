@@ -133,7 +133,19 @@
                  {
                      if (d6 * d6 + d7 * d7 + d8 * d8 > 1024.0D)
                      {
-@@ -2388,7 +2419,7 @@
+@@ -2045,7 +2076,10 @@
+ 
+     public void func_174959_b(BlockPos p_174959_1_)
+     {
+-        this.field_184387_ae.add(p_174959_1_.func_185334_h());
++        int k1 = p_174959_1_.func_177958_n();
++        int l1 = p_174959_1_.func_177956_o();
++        int i2 = p_174959_1_.func_177952_p();
++        this.func_184385_a(k1 - 1, l1 - 1, i2 - 1, k1 + 1, l1 + 1, i2 + 1, false);
+     }
+ 
+     public void func_147585_a(int p_147585_1_, int p_147585_2_, int p_147585_3_, int p_147585_4_, int p_147585_5_, int p_147585_6_)
+@@ -2388,7 +2422,7 @@
  
                  if (block.func_176223_P().func_185904_a() != Material.field_151579_a)
                  {
