@@ -249,7 +249,7 @@
          {
              if (this.field_150816_i.containsKey(p_177426_1_))
              {
-@@ -854,8 +869,34 @@
+@@ -854,8 +869,35 @@
  
          for (ClassInheritanceMultiMap<Entity> classinheritancemultimap : this.field_76645_j)
          {
@@ -282,15 +282,15 @@
 +        }
 +        
 +        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Load(this));
++        net.minecraftforge.common.lighting.LightingHooks.scheduleRelightChecksForChunkBoundaries(this.field_76637_e, this);
      }
  
      public void func_76623_d()
-@@ -871,6 +912,8 @@
+@@ -871,6 +913,7 @@
          {
              this.field_76637_e.func_175681_c(classinheritancemultimap);
          }
 +        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.world.ChunkEvent.Unload(this));
-+        net.minecraftforge.common.lighting.LightingHooks.scheduleRelightChecksForChunkBoundaries(this.field_76637_e, this);
      }
  
      public void func_76630_e()
