@@ -1,15 +1,31 @@
 --- ../src-base/minecraft/net/minecraft/block/BlockPistonBase.java
 +++ ../src-work/minecraft/net/minecraft/block/BlockPistonBase.java
-@@ -241,7 +241,7 @@
+@@ -142,7 +142,14 @@
+         }
+         else if (!flag && ((Boolean)p_176316_3_.func_177229_b(field_176320_b)).booleanValue())
+         {
+-            p_176316_1_.func_175641_c(p_176316_2_, this, 1, enumfacing.func_176745_a());
++            BlockPos blockpos = new BlockPos(p_176316_2_).func_177982_a(enumfacing.func_82601_c() * 2, enumfacing.func_96559_d() * 2, enumfacing.func_82599_e() * 2);
++            IBlockState iblockstate = p_176316_1_.func_180495_p(blockpos);
++            Block block = iblockstate.func_177230_c();
++            int pullable = 0;
++
++            if (block != Blocks.field_180384_M) pullable = 16; 
++
++            p_176316_1_.func_175641_c(p_176316_2_, this, 1, enumfacing.func_176745_a() | pullable);
+         }
+     }
+ 
+@@ -241,7 +248,7 @@
                      }
                  }
  
 -                if (!flag1 && iblockstate.func_185904_a() != Material.field_151579_a && func_185646_a(iblockstate, p_189539_2_, blockpos, enumfacing.func_176734_d(), false, enumfacing) && (iblockstate.func_185905_o() == EnumPushReaction.NORMAL || block == Blocks.field_150331_J || block == Blocks.field_150320_F))
-+                if (!flag1 && !iblockstate.func_177230_c().isAir(iblockstate, p_189539_2_, blockpos) && func_185646_a(iblockstate, p_189539_2_, blockpos, enumfacing.func_176734_d(), false, enumfacing) && (iblockstate.func_185905_o() == EnumPushReaction.NORMAL || block == Blocks.field_150331_J || block == Blocks.field_150320_F))
++                if (!((p_189539_5_ & 16) == 0) && !flag1 && !iblockstate.func_177230_c().isAir(iblockstate, p_189539_2_, blockpos) && func_185646_a(iblockstate, p_189539_2_, blockpos, enumfacing.func_176734_d(), false, enumfacing) && (iblockstate.func_185905_o() == EnumPushReaction.NORMAL || block == Blocks.field_150331_J || block == Blocks.field_150320_F))
                  {
                      this.func_176319_a(p_189539_2_, p_189539_3_, enumfacing, false);
                  }
-@@ -307,7 +307,7 @@
+@@ -307,7 +314,7 @@
                      return false;
                  }
  
@@ -18,7 +34,7 @@
              }
              else
              {
-@@ -353,7 +353,9 @@
+@@ -353,7 +360,9 @@
              {
                  BlockPos blockpos1 = list2.get(j);
                  IBlockState iblockstate = p_176319_1_.func_180495_p(blockpos1);
@@ -29,7 +45,7 @@
                  p_176319_1_.func_180501_a(blockpos1, Blocks.field_150350_a.func_176223_P(), 4);
                  --k;
                  aiblockstate[k] = iblockstate;
-@@ -434,6 +436,13 @@
+@@ -434,6 +443,13 @@
          return new BlockStateContainer(this, new IProperty[] {field_176387_N, field_176320_b});
      }
  
