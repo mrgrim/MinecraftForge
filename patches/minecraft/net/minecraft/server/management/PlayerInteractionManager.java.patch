@@ -93,7 +93,17 @@
              {
                  this.func_180237_b(p_180784_1_);
              }
-@@ -204,7 +234,7 @@
+@@ -191,7 +221,8 @@
+                 this.field_73088_d = true;
+                 this.field_180240_f = p_180784_1_;
+                 int i = (int)(f * 10.0F);
+-                this.field_73092_a.func_175715_c(this.field_73090_b.func_145782_y(), p_180784_1_, i);
++                //this.world.sendBlockBreakProgress(this.player.getEntityId(), pos, i);
++                this.field_73092_a.func_184138_a(p_180784_1_, iblockstate, iblockstate, 0);
+                 this.field_73094_o = i;
+             }
+         }
+@@ -204,7 +235,7 @@
              int i = this.field_73100_i - this.field_73089_e;
              IBlockState iblockstate = this.field_73092_a.func_180495_p(p_180785_1_);
  
@@ -102,7 +112,7 @@
              {
                  float f = iblockstate.func_185903_a(this.field_73090_b, this.field_73090_b.field_70170_p, p_180785_1_) * (float)(i + 1);
  
-@@ -233,13 +263,17 @@
+@@ -233,13 +264,17 @@
  
      private boolean func_180235_c(BlockPos p_180235_1_)
      {
@@ -124,7 +134,7 @@
          }
  
          return flag;
-@@ -247,7 +281,8 @@
+@@ -247,7 +282,8 @@
  
      public boolean func_180237_b(BlockPos p_180237_1_)
      {
@@ -134,7 +144,7 @@
          {
              return false;
          }
-@@ -264,53 +299,41 @@
+@@ -264,53 +300,41 @@
              }
              else
              {
@@ -200,7 +210,7 @@
                  return flag1;
              }
          }
-@@ -328,8 +351,11 @@
+@@ -328,8 +352,11 @@
          }
          else
          {
@@ -212,7 +222,7 @@
              ActionResult<ItemStack> actionresult = p_187250_3_.func_77957_a(p_187250_2_, p_187250_1_, p_187250_4_);
              ItemStack itemstack = actionresult.func_188398_b();
  
-@@ -357,6 +383,7 @@
+@@ -357,6 +384,7 @@
  
                  if (itemstack.func_190926_b())
                  {
@@ -220,7 +230,7 @@
                      p_187250_1_.func_184611_a(p_187250_4_, ItemStack.field_190927_a);
                  }
  
-@@ -402,13 +429,23 @@
+@@ -402,13 +430,23 @@
          }
          else
          {
@@ -247,7 +257,7 @@
                  }
              }
  
-@@ -436,14 +473,22 @@
+@@ -436,14 +474,22 @@
                  {
                      int j = p_187251_3_.func_77960_j();
                      int i = p_187251_3_.func_190916_E();
@@ -271,7 +281,7 @@
                  }
              }
          }
-@@ -453,4 +498,13 @@
+@@ -453,4 +499,13 @@
      {
          this.field_73092_a = p_73080_1_;
      }
