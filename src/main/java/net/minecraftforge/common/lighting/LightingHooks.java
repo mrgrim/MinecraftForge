@@ -26,6 +26,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.PooledMutableBlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -351,5 +352,43 @@ public class LightingHooks
                 }
             }
         }
+    }
+
+    public static void initChunkLighting(final Chunk chunk, final World world)
+    {
+        final int xBase = chunk.x << 4;
+        final int zBase = chunk.z << 4;
+
+        final PooledMutableBlockPos pos = PooledMutableBlockPos.retain(xBase, 0, zBase);
+
+        if (world.isAreaLoaded(pos.add(-16, 0, -16), pos.add(31, 255, 31), false))
+        {
+            final ExtendedBlockStorage[] extendedBlockStorage = chunk.getBlockStorageArray();
+
+            for (int j = 0; j < extendedBlockStorage.length; ++j)
+            {
+                if (extendedBlockStorage[j] == Chunk.NULL_BLOCK_STORAGE)
+                    continue;
+
+                for (int x = 0; x < 16; ++x)
+                {
+                    for (int z = 0; z < 16; ++z)
+                    {
+                        for (int y = j << 4; y < (j + 1) << 4; ++y)
+                        {
+                            if (chunk.getBlockState(x, y, z).getLightValue(world, pos.setPos(xBase + x, y, zBase + z)) > 0)
+                                world.checkLightFor(EnumSkyBlock.BLOCK, pos);
+                        }
+                    }
+                }
+            }
+
+            if (world.provider.hasSkyLight())
+                chunk.setSkylightUpdated();
+
+            chunk.setLightPopulated(true);
+        }
+
+        pos.release();
     }
 }
